@@ -24,7 +24,7 @@ const AllCourses = () => {
       <h1 className="text-center text-3xl font-bold text-primary mt-7">
         All Courses
       </h1>
-      <div className="grid grid-cols-4 gap-10 p-15 ">
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-10 p-15 ">
         {courses.map((course) => (
           <CourseCard course={course} id={course.id}></CourseCard>
         ))}
