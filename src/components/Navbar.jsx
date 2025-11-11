@@ -1,11 +1,12 @@
-import { useContext, useState } from "react";
+import {  useState } from "react";
 import { Link, Links, NavLink } from "react-router-dom";
 import { AuthContext } from "../Contexts/AuthContext";
 import { MdMoving } from "react-icons/md";
+import useAuth from "../hooks/useAuth";
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
-  const { user, loading, logOut } = useContext(AuthContext);
+  const { user, loading, logOut } = useAuth();
   console.log(user);
 
   if (loading) {
@@ -17,26 +18,52 @@ const Navbar = () => {
   }
 
   const handleLogOut = () => {
-    logOut().then(console.log("logged out"))
-
-
-  }
+    logOut().then(console.log("logged out"));
+  };
 
   const closeDrawer = () => setOpen(false);
 
   const links = (
     <>
       <li>
-        <NavLink to={"/"}>Home</NavLink>
+        <NavLink
+          to="/"
+          className={({ isActive }) =>
+            isActive
+              ? "text-primary font-semibold border-b-2 border-primary"
+              : "text-base-content/70 hover:text-primary border-b-2 border-transparent hover:border-primary transition-all"
+          }
+        >
+          Home
+        </NavLink>
       </li>
+
       <li>
-        <NavLink to={"/courses"}>All Courses</NavLink>
+        <NavLink
+          to="/courses"
+          className={({ isActive }) =>
+            isActive
+              ? "text-primary font-semibold border-b-2 border-primary"
+              : "text-base-content/70 hover:text-primary border-b-2 border-transparent hover:border-primary transition-all"
+          }
+        >
+          All Courses
+        </NavLink>
       </li>
 
       {user && (
         <>
           <li>
-            <NavLink to={`/dashboard`}>Dashboard</NavLink>
+            <NavLink
+              to="/dashboard"
+              className={({ isActive }) =>
+                isActive
+                  ? "text-primary font-semibold border-b-2 border-primary"
+                  : "text-base-content/70 hover:text-primary border-b-2 border-transparent hover:border-primary transition-all"
+              }
+            >
+              Dashboard
+            </NavLink>
           </li>
         </>
       )}
@@ -44,7 +71,7 @@ const Navbar = () => {
   );
 
   return (
-    <div className="navbar bg-neutral px-10 shadow flex justify-between container mx-auto ">
+    <div className="sticky top-0 z-50 navbar bg-base-300 px-10 shadow-xl flex justify-between container mx-auto ">
       {/* LEFT - HAMBURGER FOR MOBILE */}
       <button className="btn btn-ghost lg:hidden" onClick={() => setOpen(true)}>
         <svg
@@ -65,7 +92,13 @@ const Navbar = () => {
 
       {/* LOGO */}
       <a className="text-xl font-bold">
-        <span className="font-bold text-2xl text-secondary flex">
+        <span
+          className="font-bold text-2xl text-secondary flex"
+          ticky
+          top-0
+          z-50
+          shadow-md
+        >
           Next
           <span className="text-3xl text-primary">
             <MdMoving />
@@ -75,8 +108,10 @@ const Navbar = () => {
       </a>
 
       {/* DESKTOP NAV LINKS */}
-      <div className="hidden lg:flex ml-10 text-accent">
-        <ul className="menu menu-horizontal px-1 text-xl font-bold">{links}</ul>
+      <div className="hidden lg:flex ml-10 text-orimary">
+        <ul className="menu menu-horizontal px-1 text-xl text-base-content/70 font-bold">
+          {links}
+        </ul>
       </div>
 
       {/* PROFILE IMAGE */}
@@ -89,7 +124,9 @@ const Navbar = () => {
               alt="profile"
             />
           </div>
-          <Link onClick={handleLogOut} className="btn btn-primary bg-neutral">Logout</Link>
+          <Link onClick={handleLogOut} className="btn btn-primary bg-error">
+            Logout
+          </Link>
         </div>
       ) : (
         <div className="flex gap-4">
@@ -118,36 +155,18 @@ const Navbar = () => {
       >
         <div className="p-4">
           {/* Drawer Logo */}
-          <h1 className="text-2xl font-bold mb-4">YourLogo</h1>
+          <div className="mb-4 md:mb-0 flex items-center justify-center ">
+            <span className="font-bold text-xl text-secondary flex">
+              Next
+              <span className="text-xl text-primary">
+                <MdMoving />
+              </span>
+              <span className="text-accent">Skill</span>
+            </span>
+          </div>
 
           {/* Drawer nav items */}
-          <ul className="menu">
-            <li>
-              <Link to="/home" onClick={closeDrawer}>
-                Home
-              </Link>
-            </li>
-            <li>
-              <Link to="/about" onClick={closeDrawer}>
-                About
-              </Link>
-            </li>
-            <li>
-              <Link to="/events" onClick={closeDrawer}>
-                Events
-              </Link>
-            </li>
-            <li>
-              <Link to="/gallery" onClick={closeDrawer}>
-                Gallery
-              </Link>
-            </li>
-            <li>
-              <Link to="/contact" onClick={closeDrawer}>
-                Contact
-              </Link>
-            </li>
-          </ul>
+          <ul className="menu">{links}</ul>
         </div>
       </div>
     </div>

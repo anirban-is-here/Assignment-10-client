@@ -5,27 +5,43 @@ import "aos/dist/aos.css";
 const CourseCard = ({ course }) => {
   const { category, duration, imageUrl, price, title } = course;
   return (
-    
-      <div className="card bg-base-100 w-96 shadow-sm border flex items-center p-5">
-        <figure className="border h-50 w-80">
-          <img src={imageUrl} alt="Shoes" />
-        </figure>
-        <div className="card-body">
-          <h2 className="card-title">
-            {title}
-            <div className="badge badge-secondary">NEW</div>
-          </h2>
-          <p>
-            A card component has a figure, a body part, and inside body there
-            are title and actions parts
-          </p>
-          <div className="card-actions justify-end">
-            <div className="badge badge-outline">Fashion</div>
-            <div className="badge badge-outline">Products</div>
-          </div>
+    <div className="card bg-base-200 shadow-2xl hover:shadow-xl hover:scale-[1.02] transition-all duration-300 rounded-xl ring ring-base-300">
+      <figure className="relative">
+        <img
+          src={imageUrl}
+          alt={title}
+          className="w-full h-48 object-cover rounded-t-xl"
+          loading="lazy"
+        />
+
+        {course.isFeatured && (
+          <span className="absolute top-2 left-2 badge badge-primary shadow">
+            Featured
+          </span>
+        )}
+      </figure>
+
+      <div className="card-body space-y-2">
+        <h2 className="card-title text-lg font-bold text-primary">
+          {title}
+        </h2>
+
+        <p className="text-sm text-base-content/70">{category}</p>
+
+        <div className="flex justify-between items-center">
+          <span className="text-xl font-semibold text-secondary">
+            ${price}
+          </span>
+          <span className="badge badge-outline">{duration}</span>
+        </div>
+
+        <div className="card-actions mt-4">
+          <button className="btn btn-primary btn-sm w-full">
+            View Details
+          </button>
         </div>
       </div>
-    
+    </div>
   );
 };
 

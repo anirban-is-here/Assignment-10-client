@@ -1,15 +1,16 @@
-import axios from "axios";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { AuthContext } from "../../Contexts/AuthContext";
 import CourseCard from "../../components/CourseCard";
+import api from "../../hooks/useAxios";
+import useAuth from "../../hooks/useAuth";
 
 const AllCourses = () => {
   const [courses, setCourses] = useState([]);
-  const { loading, setLoading } = useContext(AuthContext);
+  const { loading, setLoading } = useAuth();
 
   useEffect(() => {
     setLoading(true);
-    axios.get("https://next-skill-server.vercel.app/courses").then((res) => {
+    api.get("/courses").then((res) => {
       setCourses(res.data);
       setLoading(false);
     });
@@ -19,15 +20,15 @@ const AllCourses = () => {
     return <span className="loading loading-spinner text-error ml-4"></span>;
   }
   return (
-    <div className="min-h-screen">
-      <h1 className="text-center text-3xl font-bold text-primary my-5">
+    <div className="min-h-vh bg-base-100">
+      <h1 className="text-center text-3xl font-bold text-primary mt-7">
         All Courses
       </h1>
-      <div className="m-7 grid grid-cols-3 gap-y-10 border pl-20">
+      <div className="grid grid-cols-4 gap-10 p-15 ">
         {courses.map((course) => (
           <CourseCard course={course} id={course.id}></CourseCard>
         ))}
-      </div>
+      </div>    
     </div>
   );
 };

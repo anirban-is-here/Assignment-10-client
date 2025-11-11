@@ -9,7 +9,7 @@ import { MdMoving } from "react-icons/md";
 
 const Footer = () => {
   return (
-    <footer className="bg-neutral text-base-content py-6 px-10 shadow-inner">
+    <footer className="bg-neutral container mx-auto text-base-content py-6 px-6 shadow-inner">
       <div className="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center">
         {/* LOGO */}
         <div className="mb-4 md:mb-0 flex items-center ">

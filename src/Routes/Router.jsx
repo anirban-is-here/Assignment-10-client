@@ -7,14 +7,18 @@ import MyAddedCourses from "../pages/Dashboard/MyAddedCourses";
 import AddCourse from "../pages/Dashboard/AddCourse";
 import DashBoard from "../pages/Dashboard/DashBoard";
 import AllCourses from "../pages/AllCourses/AllCourses";
+import Register from "../pages/Register/Register";
+import ErrorPage from "../pages/ErrorPage/ErrorPage";
+import MyProfile from "../pages/Dashboard/MyProfile";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <MainLayout></MainLayout>,
+    errorElement: <ErrorPage></ErrorPage>,
     children: [
       {
-        path: "home",
+        index: true,
         element: <Home></Home>,
       },
       {
@@ -34,9 +38,13 @@ const router = createBrowserRouter([
             element: <MyAddedCourses></MyAddedCourses>,
           },
           {
+            index: true,
+            element: <MyProfile></MyProfile>,
+          },
+          {
             path: "addCourse",
             element: <AddCourse></AddCourse>,
-          }
+          },
         ],
       },
       {
@@ -45,7 +53,7 @@ const router = createBrowserRouter([
       },
       {
         path: "register",
-        element: <Login></Login>,
+        element: <Register></Register>,
       },
     ],
   },

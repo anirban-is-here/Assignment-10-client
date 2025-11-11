@@ -3,75 +3,46 @@ import { NavLink, Outlet } from "react-router-dom";
 
 const DashBoard = () => {
   return (
-    <div className="flex">
-      <aside className="w-1/5 py-10 items-center bg-accent-content border">
-        <h1 className="text-xl ml-5 mb-15 font-bold text-warning">Dashboard</h1>
-        <ul className="flex flex-col justify-center ">
-          <li className="">
-            <NavLink
-              to="myEnrolledCourses"
-              className={({ isActive }) =>
-                `btn btn-ghost justify-start text-xl w-full py-10 text-warning ${
-                  isActive ? "bg-primary text-white " : ""
+    <div className="flex flex-col md:flex-row min-h-screen bg-base-200">
+      {/* Sidebar */}
+      <aside className="w-full md:w-64 bg-base-300/10 shadow-md p-6 flex flex-col justify-between">
+        <div>
+          <h1 className="text-2xl font-bold mb-8 text-center md:text-left">
+            Dashboard
+          </h1>
+          <ul className="flex flex-col gap-3">
+            {[
+              { name: "My Profile" },
+              { name: "My Enrolled Courses", path: "myEnrolledCourses" },
+              { name: "My Added Courses", path: "myAddedCourses" },
+              { name: "Add Course", path: "addCourse" },
+
+              { name: "Logout", path: "logout" },
+            ].map((item) => (
+              <li key={item.path}>
+                <NavLink
+                  to={item.path}
+                  className={({ isActive }) =>
+                    `block w-full text-lg md:text-xl px-4 py-3 rounded-lg font-semibold transition-colors duration-200
+                ${
+                  isActive
+                    ? "text-primary-content bg-primary/80 "
+                    : "text-base-content hover:ring ring-primary hover:bg-secondary/70"
                 }`
-              }
-            >
-              My Enrolled Courses
-            </NavLink>
-          </li>
-          <li>
-            <NavLink
-              to="myAddedCourses"
-              className={({ isActive }) =>
-                `btn btn-ghost justify-start text-xl w-full py-10 text-warning ${
-                  isActive ? "bg-primary text-white" : ""
-                }`
-              }
-            >
-              My Added Courses
-            </NavLink>
-          </li>
-          <li>
-            <NavLink
-              to="addCourse"
-              className={({ isActive }) =>
-                `btn btn-ghost justify-start text-xl w-full py-10 text-warning ${
-                  isActive ? "bg-primary text-white" : ""
-                }`
-              }
-            >
-              Add Course
-            </NavLink>
-          </li>
-          <li>
-            <NavLink
-              to="profile"
-              className={({ isActive }) =>
-                `btn btn-ghost justify-start text-xl w-full py-10 text-warning ${
-                  isActive ? "bg-primary text-white" : ""
-                }`
-              }
-            >
-              My Profile
-            </NavLink>
-          </li>
-          <li>
-            <NavLink
-              to="logout"
-              className={({ isActive }) =>
-                `btn btn-ghost justify-start text-xl w-full py-10 text-warning ${
-                  isActive ? "bg-primary text-white" : ""
-                }`
-              }
-            >
-              Logout
-            </NavLink>
-          </li>
-        </ul>
+                  }
+                >
+                  {item.name}
+                </NavLink>
+              </li>
+            ))}
+          </ul>
+        </div>
       </aside>
-      <div className="border w-full">
-        <Outlet></Outlet>
-      </div>
+
+      {/* Main content */}
+      <main className="w-full">
+        <Outlet />
+      </main>
     </div>
   );
 };
