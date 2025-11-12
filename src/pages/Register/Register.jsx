@@ -80,7 +80,7 @@ const Register = () => {
 
         {error && <p className="text-red-500 mb-4">{error}</p>}
 
-        <form onSubmit={handleRegister} className="space-y-4 ">
+        <form onSubmit={handleRegister} className="space-y-4">
           <div>
             <label htmlFor="">Name</label>
             <input

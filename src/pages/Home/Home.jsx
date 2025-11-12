@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from "react";
 import api from "../../hooks/useAxios";
 import CourseCard from "../../components/CourseCard";
+import { motion } from "framer-motion";
+
 
 const Home = () => {
   const [featured, setFeatured] = useState([]);
+  const [isDragging, setIsDragging] = useState(false);
   useEffect(() => {
     try {
       api.get("/courses/featured").then((res) => {
@@ -16,12 +19,13 @@ const Home = () => {
   return (
     <div className="w-full">
       {/* ✅ HERO / BANNER SECTION */}
-      <section className="bg-linear-to-r from-primary to-secondary text-white py-20 md:py-32 px-6">
+      <section className="glass text-primary py-20 md:py-32 px-6">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center gap-10">
           {/* Text Content */}
           <div className="flex-1 space-y-6">
             <h1 className="text-4xl md:text-6xl font-bold leading-tight">
-              Learn From The Best. Upgrade Your Skills.
+              Master New Skills Transform{" "}
+              <span className="text-secondary">Your Future</span>
             </h1>
             <p className="text-lg md:text-xl text-base-content/90">
               Join thousands of learners and master new skills with top
@@ -37,7 +41,7 @@ const Home = () => {
           {/* Hero Image / Illustration */}
           <div className="flex-1 hidden md:flex justify-center">
             <img
-              src="/hero-illustration.png"
+              src="https://i.ibb.co.com/8gGzcKZv/open-laptop-desk-online-study-screen.jpg"
               alt="Learning Banner"
               className="w-3/4 animate-fade-in"
             />
@@ -51,12 +55,21 @@ const Home = () => {
           Popular Courses
         </h2>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        <motion.div
+          className="flex gap-6 w-max"
+          drag="x"
+          dragConstraints={{ left: -1000, right: 0 }} // Adjust according to content width
+          onDragStart={() => setIsDragging(true)}
+          onDragEnd={() => setIsDragging(false)}
+          whileTap={{ cursor: "grabbing" }}
+          animate={{ x: ["0%", "-50%"] }}
+          transition={{ repeat: Infinity, duration: 20, ease: "linear" }}
+        >
           {featured.map((course) => (
             <CourseCard course={course}></CourseCard>
           ))}
           {/* <CourseCard /> component will go here */}
-        </div>
+        </motion.div>
       </section>
 
       {/* ✅ WHY CHOOSE US SECTION */}
@@ -98,7 +111,7 @@ const Home = () => {
 
         <div className="flex overflow-x-auto gap-6 pb-4">
           {/* Replace with .map() after fetching instructors */}
-          <div className="card w-64 flex-shrink-0 bg-base-100 shadow hover:scale-105 transition">
+          <div className="card w-64 flex shrink-0 bg-base-100 shadow hover:scale-105 transition">
             <figure>
               <img
                 src="/instructor-1.jpg"

@@ -3,6 +3,7 @@ import { Link, Links, NavLink } from "react-router-dom";
 import { AuthContext } from "../Contexts/AuthContext";
 import { MdMoving } from "react-icons/md";
 import useAuth from "../hooks/useAuth";
+import { RiArrowDropDownLine } from "react-icons/ri";
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
@@ -71,9 +72,9 @@ const Navbar = () => {
   );
 
   return (
-    <div className="sticky top-0 z-50 navbar bg-base-300 px-10 shadow-xl flex justify-between container mx-auto ">
+    <div className="sticky top-0 z-50 navbar bg-base-300 lg:px-10 shadow flex justify-between container mx-auto">
       {/* LEFT - HAMBURGER FOR MOBILE */}
-      <button className="btn btn-ghost lg:hidden" onClick={() => setOpen(true)}>
+      <button className="btn btn-xs btn-ghost lg:hidden" onClick={() => setOpen(true)}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           className="h-6 w-6"
@@ -91,28 +92,68 @@ const Navbar = () => {
       </button>
 
       {/* LOGO */}
-      <a className="text-xl font-bold">
+      <Link to={"/"} className="text-xl font-bold">
         <span
-          className="font-bold text-2xl text-secondary flex"
+          className="text-md lg:font-bold lg:text-2xl text-secondary flex"
           ticky
           top-0
           z-50
           shadow-md
         >
           Next
-          <span className="text-3xl text-primary">
+          <span className="lg:text-3xl text-primary">
             <MdMoving />
           </span>
           <span className="text-accent">Skill</span>
         </span>
-      </a>
+      </Link>
+
+      <div className="hidden lg:flex dropdown ring ring-base-100 bg-base-300">
+        <div tabIndex={0} role="button" className="btn btn-ghost ">
+          Explore Categories
+          <span className="text-2xl">
+            <RiArrowDropDownLine />
+          </span>
+        </div>
+        <ul
+          tabIndex="-1"
+          className="menu dropdown-content bg-base-200 rounded-box z-1 mt-4 w-52 p-2 shadow-sm"
+        >
+          <li>
+            <a>Item 1</a>
+          </li>
+          <li>
+            <a>Item 2</a>
+          </li>
+        </ul>
+      </div>
 
       {/* DESKTOP NAV LINKS */}
-      <div className="hidden lg:flex ml-10 text-orimary">
+      <div className="hidden lg:flex ml-10 text-primary">
         <ul className="menu menu-horizontal px-1 text-xl text-base-content/70 font-bold">
           {links}
         </ul>
       </div>
+
+      <label className=" hidden lg:flex input input-primary">
+        <svg
+          className="h-[1em] opacity-50"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+        >
+          <g
+            strokeLinejoin="round"
+            strokeLinecap="round"
+            strokeWidth="2.5"
+            fill="none"
+            stroke="currentColor"
+          >
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.3-4.3"></path>
+          </g>
+        </svg>
+        <input type="search" required placeholder="What do you want to learn today.." />
+      </label>
 
       {/* PROFILE IMAGE */}
       {user ? (
@@ -134,7 +175,7 @@ const Navbar = () => {
             Login
           </Link>
 
-          <Link to="/register" className="btn btn-secondary">
+          <Link to="/register" className="btn btn-secondary hidden lg:flex">
             Register
           </Link>
         </div>
