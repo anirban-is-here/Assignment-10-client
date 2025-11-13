@@ -1,8 +1,23 @@
 import React from "react";
-import { NavLink, Outlet } from "react-router-dom";
+import { Navigate, NavLink, Outlet } from "react-router-dom";
 import MyProfile from "./MyProfile";
+import useAuth from "../../hooks/useAuth";
+import Swal from "sweetalert2";
 
 const DashBoard = () => {
+  const { user, loading, logOut } = useAuth();
+
+  const handleLogout = () => {
+    logOut()
+    Swal.fire({
+      icon: "success",
+      title: "Logged out!",
+      text: "You have logged out successfully.",
+      timer: 1500,
+      showConfirmButton: false,
+    }).then(Navigate(`/login`));
+
+  };
   return (
     <div className="flex flex-col md:flex-row min-h-screen bg-base-200">
       {/* Sidebar */}
@@ -18,8 +33,6 @@ const DashBoard = () => {
 
               { name: "My Added Courses", path: "myAddedCourses" },
               { name: "Create New Course", path: "addCourse" },
-
-              { name: "Logout", path: "logout" },
             ].map((item) => (
               <li key={item.path}>
                 <NavLink
@@ -37,6 +50,14 @@ const DashBoard = () => {
                 </NavLink>
               </li>
             ))}
+            <li>
+              <button
+                onClick={handleLogout}
+                className="btn bg-base-100 btn-xl m-3 ring"
+              >
+                Logout
+              </button>
+            </li>
           </ul>
         </div>
       </aside>

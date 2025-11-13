@@ -1,33 +1,38 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import useAuth from "../../hooks/useAuth";
 import api from "../../hooks/useAxios";
-import { useEffect, useState } from "react";
 
 const MyEnrolledCourses = () => {
-  const { user, loading, setLoading } = useAuth();
+  const { user } = useAuth();
   const [courses, setCourses] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    setLoading(true);
-    api
-      .get(`/users/${user?.uid}/enrolled`)
-      .then((res) => {
-        console.log(res);
-        setCourses(res.data);
+    if (!user?.uid) return; // wait until user exists
+
+    const fetchCourses = async () => {
+      setLoading(true);
+      try {
+        const res = await api.get(`/users/${user.uid}/enrolled`);
+        setCourses(res.data || []);
+      } catch (error) {
+        console.error("Failed to fetch enrolled courses:", error);
+        setCourses([]);
+      } finally {
         setLoading(false);
-      })
-      .catch((err) => {
-        console.log(err);
-        setLoading(false);
-      });
-  }, [user, setLoading]);
-  console.log(courses);
-  if (loading)
+      }
+    };
+
+    fetchCourses();
+  }, [user?.uid]);
+
+  if (loading) {
     return (
       <div className="flex justify-center py-20">
         <span className="loading loading-spinner text-primary text-4xl"></span>
       </div>
     );
+  }
 
   return (
     <div className="max-w-7xl mx-auto p-6">

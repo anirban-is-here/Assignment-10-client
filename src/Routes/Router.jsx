@@ -11,6 +11,7 @@ import Register from "../pages/Register/Register";
 import ErrorPage from "../pages/ErrorPage/ErrorPage";
 import MyProfile from "../pages/Dashboard/MyProfile";
 import CourseDetail from "../pages/CourseDetails/CourseDetail";
+import PrivateRoute from "./PrivateRoutes";
 
 
 const router = createBrowserRouter([
@@ -29,11 +30,19 @@ const router = createBrowserRouter([
       },
       {
         path: "courses/:_id",
-        element: <CourseDetail></CourseDetail>,
+        element: (
+          <PrivateRoute>
+            <CourseDetail></CourseDetail>
+          </PrivateRoute>
+        ),
       },
       {
         path: "dashboard",
-        element: <DashBoard></DashBoard>,
+        element: (
+          <PrivateRoute>
+            <DashBoard></DashBoard>
+          </PrivateRoute>
+        ),
         children: [
           {
             path: "myEnrolledCourses",

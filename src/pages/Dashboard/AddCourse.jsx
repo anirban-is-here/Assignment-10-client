@@ -73,7 +73,7 @@ const AddCourse = () => {
   };
 
   return (
-    <div className=" m-8 p-8 rounded glass rounded-md">
+    <div className=" m-8 p-8 mt-30 glass rounded-md">
       <h2 className="text-3xl font-bold mb-6 text-center text-primary">
         Add a New Course
       </h2>

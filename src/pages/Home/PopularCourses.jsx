@@ -14,7 +14,7 @@ const PopularCourses = () => {
   }, []);
 
   return (
-    <section className="max-w-7xl mx-auto py-12 md:py-16 px-4 md:px-6">
+    <section className=" py-12 md:py-16 px-4 md:px-6">
       <h2 className="text-3xl font-bold text-center mb-10">Popular Courses</h2>
 
       <div

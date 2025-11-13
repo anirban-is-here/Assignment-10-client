@@ -1,7 +1,5 @@
 import {  useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-
-
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import api from "../../hooks/useAxios";
 import useAuth from "../../hooks/useAuth";
@@ -10,6 +8,8 @@ import useAuth from "../../hooks/useAuth";
 
 const Login = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || "/";
 
   const { setLoading, signInUser, signInGoogle } = useAuth();
 
@@ -48,6 +48,7 @@ const Login = () => {
         };
         console.log(newUser);
         setLoading(false);
+        navigate(from, { replace: true });
 
         try {
           api.post("/users", newUser).then(console.log("user added in db"));
@@ -55,14 +56,13 @@ const Login = () => {
           (err) => console.log(err);
         }
       });
-      navigate("/");
     } catch (err) {
       setError(err.message);
     }
   };
 
   return (
-    <div className="flex flex-1 items-center justify-center bg-base-200 px-4">
+    <div className="min-h-screen flex flex-1 items-center justify-center bg-base-200 px-4">
       <div className="card w-full max-w-md shadow-xl bg-base-100 p-6">
         <h2 className="text-2xl font-bold text-center mb-4 text-primary">
           Login
@@ -119,7 +119,10 @@ const Login = () => {
         <div className="divider">OR</div>
 
         {/* GOOGLE LOGIN */}
-        <button onClick={handleGoogleLogin} className="btn bg-white text-black border-[#e5e5e5] mx-4 text-md mb-2">
+        <button
+          onClick={handleGoogleLogin}
+          className="btn bg-white text-black border-[#e5e5e5] mx-4 text-md mb-2"
+        >
           <svg
             aria-label="Google logo"
             width="16"

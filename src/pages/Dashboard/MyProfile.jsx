@@ -1,118 +1,138 @@
-import React, { useState } from "react";
+// RegisterPage.jsx
+import { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
+import api from "../../hooks/useAxios";
 
-const MyProfile = () => {
-  const { user } = useAuth();
+const Register = () => {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [image, setImage] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const { createUser, signInGoogle, updateUserProfile, setLoading } = useAuth();
+  const navigate = useNavigate();
 
-  const [formData, setFormData] = useState({
-    name: user?.displayName || "",
-    email: user?.email || "",
-    bio: user?.bio || "",
-  });
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+  const validatePassword = (pwd) => {
+    if (pwd.length < 6) return "Password must be at least 6 characters.";
+    if (!/[A-Z]/.test(pwd)) return "Password must include an uppercase letter.";
+    if (!/[a-z]/.test(pwd)) return "Password must include a lowercase letter.";
+    return null;
   };
 
-  const handleSave = () => {
-    console.log("Save profile data:", formData);
-    // Here you can call API to update user profile
+  const handleRegister = async (e) => {
+    e.preventDefault();
+    const pwdError = validatePassword(password);
+    if (pwdError) return setError(pwdError);
+
+    setError("");
+    setLoading(true);
+
+    try {
+      const res = await createUser(email, password);
+      await updateUserProfile(name, image);
+
+      const user = res.user;
+      const newUser = {
+        _id: user.uid,
+        name: user.displayName || "",
+        email: user.email,
+        photoURL: user.photoURL || "",
+      };
+
+      api.post("/users", newUser).then(() => console.log("User added in db"));
+      navigate("/home");
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    setLoading(true);
+    try {
+      await signInGoogle().then((res) => {
+        const user = res.user;
+        const newUser = {
+          _id: user.uid,
+          name: user.displayName || "",
+          email: user.email,
+          photoURL: user.photoURL || "",
+        };
+        api.post("/users", newUser).then(() => console.log("User added in db"));
+      });
+      navigate("/home");
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div className="max-w-7xl mx-auto p-6 bg-base-200 rounded-lg shadow-lg">
-      {/* Profile Header */}
-      <div className="flex flex-col md:flex-row items-center md:items-start gap-6 bg-base-300 p-6 rounded-lg text-primary">
-        <div className="">
-          <div className="w-40 h-40 rounded-full ring ring-secondary ring-offset-2 overflow-hidden">
-            <img
-              className="w-40 h-40"
-              src={user?.photoURL || "/default-avatar.png"}
-              alt="Profile"
-            />
-          </div>
-          <button className="btn btn-sm mt-2 btn-accent w-full">
-            Change Photo
-          </button>
-        </div>
-        <div className="flex-1 text-base-content">
-          <h1 className="text-3xl font-bold">
-            {user?.displayName || "Your Name"}
-          </h1>
-          <p className="text-lg">{user?.email}</p>
-          <p className="mt-2 text-gray-200">{user?.bio || "Add your bio..."}</p>
-        </div>
-      </div>
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="p-8 rounded-lg shadow-md w-full max-w-md bg-base-200">
+        <h2 className="text-2xl font-bold mb-3 text-primary text-center">
+          Register
+        </h2>
+        {error && <p className="text-red-500 mb-4">{error}</p>}
 
-      {/* Stats */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mt-6">
-        <div className="p-4 bg-base-300 text-secondary rounded-lg shadow text-center">
-          <p className="text-xl font-bold">{user?.coursesAdded || 0}</p>
-          <p>Courses Added</p>
-        </div>
-        <div className="p-4 bg-base-300 text-primary rounded-lg shadow text-center">
-          <p className="text-xl font-bold">{user?.coursesEnrolled || 0}</p>
-          <p>Courses Enrolled</p>
-        </div>
-        <div className="p-4 bg-base-300 text-primary rounded-lg shadow text-center">
-          <p className="text-xl font-bold">{user?.students || 0}</p>
-          <p>Total Students</p>
-        </div>
-        <div className="p-4 bg-base-300 text-primary rounded-lg shadow text-center">
-          <p className="text-xl font-bold">{user?.certificates || 0}</p>
-          <p>Certificates</p>
-        </div>
-      </div>
-
-      {/* Editable Info Form */}
-      <div className="mt-6">
-        <h2 className="text-2xl font-bold mb-4 text-primary">Edit Profile</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <form onSubmit={handleRegister} className="space-y-4">
           <input
             type="text"
-            name="name"
             placeholder="Name"
-            value={formData.name}
-            onChange={handleChange}
-            className="input input-bordered w-full"
+            className="input w-full"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            required
           />
-          <div className="border border-primary/50 rounded-lg">
-            <input
-              type="email"
-              value={formData.email}
-              disabled
-              className="input input-bordered w-full  cursor-not-allowed "
-            />
-          </div>
-          <textarea
-            name="bio"
-            rows={4}
-            value={formData.bio}
-            placeholder="Bio"
-            className="textarea textarea-bordered w-full md:col-span-2"
-            onChange={handleChange}
+          <input
+            type="email"
+            placeholder="Email"
+            className="input w-full"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
           />
-        </div>
-        <div className="mt-4 text-right">
-          <button onClick={handleSave} className="btn btn-primary">
-            Save Changes
+          <input
+            type="text"
+            placeholder="Photo URL"
+            className="input w-full"
+            value={image}
+            onChange={(e) => setImage(e.target.value)}
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            className="input w-full"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+          <button type="submit" className="btn btn-primary w-full">
+            Register
           </button>
-        </div>
-      </div>
+        </form>
 
-      {/* Activity Tabs */}
-      <div className="mt-8">
-        <div className="tabs tabs-boxed">
-          <a className="tab tab-active">Enrolled Courses</a>
-          <a className="tab">Added Courses</a>
-          <a className="tab">Certificates</a>
-        </div>
+        <div className="divider">OR</div>
 
-        <div className="mt-4">{/* Render content based on active tab */}</div>
+        <button
+          onClick={handleGoogleLogin}
+          className="btn btn-white w-full flex items-center justify-center gap-2"
+        >
+          Google Login
+        </button>
+
+        <p className="mt-4 text-center text-sm">
+          Already have an account?{" "}
+          <Link to="/login" className="text-blue-500 underline">
+            Login here
+          </Link>
+        </p>
       </div>
     </div>
   );
 };
 
-export default MyProfile;
+export default Register;

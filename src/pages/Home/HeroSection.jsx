@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 const HeroSection = () => {
   return (
-    <section className="glass text-primary py-16 md:py-32 px-4 md:px-6">
+    <section className="glass text-primary py-16 md:py-32 px-4 lg:m-5 rounded-lg shadow-md shadow-secondary md:px-6">
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center gap-10">
         {/* Text Content */}
         <div className="flex-1 space-y-6">

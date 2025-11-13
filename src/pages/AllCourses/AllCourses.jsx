@@ -22,8 +22,8 @@ const AllCourses = () => {
 
   console.log(courses);
   return (  
-    <div className="min-h-vh bg-base-300 border border-base-100">
-      <h1 className="text-center text-3xl font-bold text-primary mt-7">
+    <div className="min-h-vh bg-base-300 border border-base-100 pt-25">
+      <h1 className="text-center text-3xl font-bold mt-7">
         All Courses
       </h1>
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-10 p-15 ">

@@ -5,7 +5,7 @@ import TopInstructors from "./TopInstructors";
 
 const Home = () => {
   return (
-    <div className="w-full">
+    <div className="w-full pt-30">
       <HeroSection />
       <PopularCourses />
       <WhyChooseUs />
