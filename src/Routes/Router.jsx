@@ -10,6 +10,8 @@ import AllCourses from "../pages/AllCourses/AllCourses";
 import Register from "../pages/Register/Register";
 import ErrorPage from "../pages/ErrorPage/ErrorPage";
 import MyProfile from "../pages/Dashboard/MyProfile";
+import CourseDetail from "../pages/CourseDetails/CourseDetail";
+
 
 const router = createBrowserRouter([
   {
@@ -24,6 +26,10 @@ const router = createBrowserRouter([
       {
         path: "courses",
         element: <AllCourses></AllCourses>,
+      },
+      {
+        path: "courses/:_id",
+        element: <CourseDetail></CourseDetail>,
       },
       {
         path: "dashboard",
@@ -41,6 +47,11 @@ const router = createBrowserRouter([
             index: true,
             element: <MyProfile></MyProfile>,
           },
+          {
+            path: "addCourse",
+            element: <AddCourse></AddCourse>,
+          },
+
           {
             path: "addCourse",
             element: <AddCourse></AddCourse>,

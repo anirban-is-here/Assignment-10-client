@@ -1,5 +1,6 @@
 import React from "react";
 import { NavLink, Outlet } from "react-router-dom";
+import MyProfile from "./MyProfile";
 
 const DashBoard = () => {
   return (
@@ -7,15 +8,16 @@ const DashBoard = () => {
       {/* Sidebar */}
       <aside className="w-full md:w-64 bg-base-300/10 shadow-md p-6 flex flex-col justify-between">
         <div>
-          <h1 className="text-2xl font-bold mb-8 text-center md:text-left">
+          <h1 className="text-2xl text-primary font-bold mb-8 text-center md:text-left">
             Dashboard
           </h1>
           <ul className="flex flex-col gap-3">
             {[
-              { name: "My Profile" },
-              { name: "My Enrolled Courses", path: "myEnrolledCourses" },
+              { name: "Profile", path: "myProfile" },
+              { name: "My Enrolled Course", path: "myEnrolledCourses" },
+
               { name: "My Added Courses", path: "myAddedCourses" },
-              { name: "Add Course", path: "addCourse" },
+              { name: "Create New Course", path: "addCourse" },
 
               { name: "Logout", path: "logout" },
             ].map((item) => (
@@ -27,7 +29,7 @@ const DashBoard = () => {
                 ${
                   isActive
                     ? "text-primary-content bg-primary/80 "
-                    : "text-base-content hover:ring ring-primary hover:bg-secondary/70"
+                    : "text-base-content hover:ring ring-primary hover:bg-base-100/70"
                 }`
                   }
                 >
@@ -41,7 +43,7 @@ const DashBoard = () => {
 
       {/* Main content */}
       <main className="w-full">
-        <Outlet />
+        <Outlet></Outlet>
       </main>
     </div>
   );

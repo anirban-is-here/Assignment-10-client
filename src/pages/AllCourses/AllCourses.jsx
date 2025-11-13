@@ -19,14 +19,16 @@ const AllCourses = () => {
   if (loading) {
     return <span className="loading loading-spinner text-error ml-4"></span>;
   }
-  return (
-    <div className="min-h-vh bg-base-100">
+
+  console.log(courses);
+  return (  
+    <div className="min-h-vh bg-base-300 border border-base-100">
       <h1 className="text-center text-3xl font-bold text-primary mt-7">
         All Courses
       </h1>
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-10 p-15 ">
         {courses.map((course) => (
-          <CourseCard course={course} id={course.id}></CourseCard>
+          <CourseCard course={course} id={course._id}></CourseCard>
         ))}
       </div>    
     </div>

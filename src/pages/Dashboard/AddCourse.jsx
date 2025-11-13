@@ -1,10 +1,11 @@
 import { useState } from "react";
 import api from "../../hooks/useAxios";
-import { AuthContext } from "../../Contexts/AuthContext";
 import useAuth from "../../hooks/useAuth";
+import Swal from "sweetalert2";
 
 const AddCourse = () => {
   const { user, setLoading } = useAuth();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [formData, setFormData] = useState({
     title: "",
@@ -13,33 +14,43 @@ const AddCourse = () => {
     duration: "",
     category: "",
     description: "",
-
     isFeatured: false,
   });
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-
-    setFormData({
-      ...formData,
+    setFormData((prev) => ({
+      ...prev,
       [name]: type === "checkbox" ? checked : value,
-    });
+    }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // prevent multiple submissions
+    if (isSubmitting) return;
+
     setLoading(true);
+    setIsSubmitting(true);
 
     try {
       const payload = {
         ...formData,
         instructorId: user?.uid,
       };
+
       const res = await api.post("/courses", payload);
-      console.log("course submitted", res.data);
 
-      // save to database
+      Swal.fire({
+        icon: "success",
+        title: "Course Added!",
+        text: `${res.data.title} has been added successfully.`,
+        timer: 2000,
+        showConfirmButton: false,
+      });
 
+      // reset form
       setFormData({
         title: "",
         imageUrl: "",
@@ -50,27 +61,31 @@ const AddCourse = () => {
         isFeatured: false,
       });
     } catch (error) {
-      console.log("error adding course", error);
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: error.response?.data?.message || error.message,
+      });
     } finally {
       setLoading(false);
+      setIsSubmitting(false);
     }
   };
 
   return (
-    <div className="border w-full p-8 rounded bg-base-100">
+    <div className=" m-8 p-8 rounded glass rounded-md">
       <h2 className="text-3xl font-bold mb-6 text-center text-primary">
         Add a New Course
       </h2>
 
       <form
         onSubmit={handleSubmit}
-        className="grid grid-cols-1 md:grid-cols-2 gap-6 "
+        className="grid grid-cols-1 md:grid-cols-2 gap-6"
       >
         {/* Left column */}
         <div className="space-y-4">
-          {/* Title */}
           <div>
-            <label className="label  text-base-content">
+            <label className="label text-base-content">
               <span className="label-text">Course Title</span>
             </label>
             <input
@@ -84,7 +99,6 @@ const AddCourse = () => {
             />
           </div>
 
-          {/* Image URL */}
           <div>
             <label className="label">
               <span className="label-text text-base-content">Image URL</span>
@@ -94,15 +108,14 @@ const AddCourse = () => {
               name="imageUrl"
               className="input input-bordered w-full"
               placeholder="e.g., https://example.com/course-image.png"
-              value={formData.image}
+              value={formData.imageUrl}
               onChange={handleChange}
               required
             />
           </div>
 
-          {/* Price */}
           <div>
-            <label className="label  text-base-content">
+            <label className="label text-base-content">
               <span className="label-text">Price ($)</span>
             </label>
             <input
@@ -119,7 +132,6 @@ const AddCourse = () => {
 
         {/* Right column */}
         <div className="space-y-4">
-          {/* Duration */}
           <div>
             <label className="label text-base-content">
               <span className="label-text">Duration (weeks)</span>
@@ -135,7 +147,6 @@ const AddCourse = () => {
             />
           </div>
 
-          {/* Category */}
           <div>
             <label className="label text-base-content">
               <span className="label-text">Category</span>
@@ -166,7 +177,6 @@ const AddCourse = () => {
             </select>
           </div>
 
-          {/* Featured */}
           <div className="flex items-center gap-3 mt-2">
             <input
               type="checkbox"
@@ -179,7 +189,6 @@ const AddCourse = () => {
           </div>
         </div>
 
-        {/* Full width textarea */}
         <div className="md:col-span-2">
           <label className="label">
             <span className="label-text">Description</span>
@@ -195,10 +204,13 @@ const AddCourse = () => {
           ></textarea>
         </div>
 
-        {/* Full width submit button */}
         <div className="md:col-span-2">
-          <button type="submit" className="btn btn-primary w-full">
-            Add Course
+          <button
+            type="submit"
+            className="btn btn-primary w-full"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? "Submitting..." : "Add Course"}
           </button>
         </div>
       </form>

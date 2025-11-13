@@ -8,20 +8,20 @@ const MyEnrolledCourses = () => {
   const [courses, setCourses] = useState([]);
 
   useEffect(() => {
-    if (!user) return;
     setLoading(true);
     api
-      .get("/enrollments", { params: { userId: user.uid } })
+      .get(`/users/${user?.uid}/enrolled`)
       .then((res) => {
+        console.log(res);
         setCourses(res.data);
         setLoading(false);
       })
       .catch((err) => {
-        console.error(err);
+        console.log(err);
         setLoading(false);
       });
-  }, [user]);
-
+  }, [user, setLoading]);
+  console.log(courses);
   if (loading)
     return (
       <div className="flex justify-center py-20">
